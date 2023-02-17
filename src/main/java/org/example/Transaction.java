@@ -1,13 +1,5 @@
 package org.example;
 
-// 6. банковский перевод
-//	а) номер банковского счета отправителя
-//	б) номер банковского счета получателя
-//	в) дата транзакции
-//	г) размер транзакции
-//	д) валюта
-//	е) идентификатор транзакции
-
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.Currency;
