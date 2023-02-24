@@ -40,6 +40,13 @@ public class Main {
         System.out.println(fibbonacciSearch(transactions, 44));
         System.out.println(System.nanoTime() - millis);
         System.out.println();
+
+        Tree tree = new Tree(transactions);
+
+        millis = System.nanoTime();
+        Transaction transaction = tree.findTransactionById(44);
+        System.out.println(System.nanoTime() - millis);
+        System.out.println(transaction);
     }
 
     // Returns index of found element
