@@ -1,6 +1,8 @@
 package org.example;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Currency;
 import java.util.Objects;
@@ -10,7 +12,7 @@ public class Transaction {
     private long id;
     private String senderCardNumber;
     private String recipientCardNumber;
-    private ZonedDateTime dateTime; // in format "2011-12-03T10:15:30+01:00"
+    private ZonedDateTime dateTime; // in format "2011-12-03T10:15:30"
     private BigDecimal moneyAmount;
     private Currency currency;
 
@@ -26,6 +28,28 @@ public class Transaction {
         this.dateTime = dateTime;
         this.moneyAmount = moneyAmount;
         this.currency = currency;
+    }
+
+    public Transaction(Transaction transaction) {
+        this.id = transaction.getId();
+        this.senderCardNumber = transaction.getSenderCardNumber();
+        this.recipientCardNumber = transaction.getRecipientCardNumber();
+        this.dateTime = transaction.getDateTime();
+        this.moneyAmount = transaction.getMoneyAmount();
+        this.currency = transaction.getCurrency();
+    }
+
+    private Transaction() {
+        this.id = 0;
+        this.senderCardNumber = "0000000000000000";
+        this.recipientCardNumber = "111111111111111111";
+        this.dateTime = ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneId.of("UTC"));
+        this.moneyAmount = new BigDecimal(1);
+        this.currency = Currency.getInstance("USD");
+    }
+
+    public Transaction emptyTransaction() {
+        return new Transaction();
     }
 
     public long getId() {

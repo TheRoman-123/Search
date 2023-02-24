@@ -3,19 +3,31 @@ package org.example;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Currency;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SerialTransaction {
-    public void serialize(List<Transaction> transactions, Path filePath) {
-
+    public void serialize(Collection<Transaction> transactions, Path filePath) {
+        try {
+            Collection<? extends CharSequence> transactionsToSerialize = transactions
+                    .stream()
+                    .map(Transaction::toString)
+                    .collect(Collectors.toCollection(ArrayList::new));
+            Files.write(filePath, transactionsToSerialize, Charset.defaultCharset());
+        }
+        catch (IOException e) {
+            System.err.println("Something went wrong when serializing transactions");
+        }
     }
 
     public static List<Transaction> deserialize(Path filePath)
