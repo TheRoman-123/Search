@@ -9,12 +9,15 @@ import java.util.Objects;
 
 
 public class Transaction {
-    private long id;
-    private String senderCardNumber;
-    private String recipientCardNumber;
-    private ZonedDateTime dateTime; // in format "2011-12-03T10:15:30"
-    private BigDecimal moneyAmount;
-    private Currency currency;
+    private static class EmptyTransaction {
+        public static final Transaction emptyTransaction = new Transaction();
+    }
+    private final long id;
+    private final String senderCardNumber;
+    private final String recipientCardNumber;
+    private final ZonedDateTime dateTime; // in format "2011-12-03T10:15:30"
+    private final BigDecimal moneyAmount;
+    private final Currency currency;
 
     public Transaction(long id,
                        String senderCardNumber,
@@ -48,8 +51,8 @@ public class Transaction {
         this.currency = Currency.getInstance("USD");
     }
 
-    public Transaction emptyTransaction() {
-        return new Transaction();
+    public static Transaction emptyTransaction() {
+        return EmptyTransaction.emptyTransaction;
     }
 
     public long getId() {
