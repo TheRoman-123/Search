@@ -6,163 +6,173 @@ import java.util.List;
 
 public class Main {
     private static List<Transaction> transactionList;
+    private static int countComparisons = 0;
+    private static int countSwaps = 0;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
         Path filePath = Path.of("D:\\Documents\\Java\\ASD\\transactions.csv");
 
         transactionList = SerialTransaction.deserialize(filePath);
 
-        transactionList.forEach(System.out::println);
 
         Transaction[] transactions = transactionList.toArray(new Transaction[0]);
+        System.out.println("Bubble sort: best - O(n), ~ O(n^2), worst - O(n^2) ");
 
-        long millis = System.nanoTime();
-        System.out.println(linearSearch(transactions, 44));
-        System.out.println(System.nanoTime() - millis);
+        long nanos = System.nanoTime();
+        bubbleSort(transactions);
+        System.out.println("Time: " + (System.nanoTime() - nanos) + " nanos");
+
+        System.out.println("Amount of comparisons: " + countComparisons);
+//        transactions.length * transactions.length / 2
+        System.out.println("Amount of swaps: " + countSwaps);
+        printTransactionArray(transactions);
         System.out.println();
 
-        millis = System.nanoTime();
-        System.out.println(binarySearch(transactions, 44));
-        System.out.println(System.nanoTime() - millis);
+
+        countComparisons = 0;
+        countSwaps = 0;
+        transactions = transactionList.toArray(new Transaction[0]);
+        System.out.println("Merge sort: best - O(n*log(n)), ~ O(n*log(n)), worst - O(n*log(n)) ");
+
+        nanos = System.nanoTime();
+        mergeSort(transactions, 0, transactions.length - 1);
+        System.out.println("Time: " + (System.nanoTime() - nanos) + " nanos");
+
+        System.out.println("Amount of comparisons: " + countComparisons);
+        System.out.println("Amount of swaps: " + countSwaps);
+        printTransactionArray(transactions);
         System.out.println();
 
-        millis = System.nanoTime();
-        System.out.println(recursiveBinarySearch(transactions, 0, transactions.length, 44));
-        System.out.println(System.nanoTime() - millis);
+
+        countComparisons = 0;
+        countSwaps = 0;
+        transactions = transactionList.toArray(new Transaction[0]);
+        System.out.println("Insertion sort: best - O(n), ~ O(n^2), worst - O(n^2) ");
+
+        nanos = System.nanoTime();
+        insertionSort(transactions);
+        System.out.println("Time: " + (System.nanoTime() - nanos) + " nanos");
+
+        System.out.println("Amount of comparisons: " + countComparisons);
+        System.out.println("Amount of swaps: " + countSwaps);
+        printTransactionArray(transactions);
         System.out.println();
 
-        millis = System.nanoTime();
-        System.out.println(interpolationSearch(transactions, 44));
-        System.out.println(System.nanoTime() - millis);
+
         System.out.println();
-
-        millis = System.nanoTime();
-        System.out.println(fibbonacciSearch(transactions, 44));
-        System.out.println(System.nanoTime() - millis);
-        System.out.println();
-
-        Tree tree = new Tree(transactions);
-
-        millis = System.nanoTime();
-        Transaction transaction = tree.findTransactionById(44);
-        System.out.println(System.nanoTime() - millis);
-        System.out.println(transaction);
     }
 
-    // Returns index of found element
-    public static int linearSearch(Transaction[] array, long id) {
-        for (int i = 0; i < array.length; i++) {
-            if (array[i].getId() == id) {
-                return i;
-            }
+    private static void printTransactionArray(Transaction[] transactions) {
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction);
         }
-        return -1;
     }
 
-    // The array must be sorted after id
-    public static int binarySearch(Transaction[] array, long id) {
 
-        int firstIndex = 0;
-        int lastIndex = array.length - 1;
-
-        // условие прекращения (элемент не представлен)
-        while (firstIndex <= lastIndex) {
-            int middleIndex = (firstIndex + lastIndex) / 2;
-            // если средний элемент - целевой элемент, вернуть его индекс
-            if (array[middleIndex].getId() == id) {
-                return middleIndex;
-            }
-
-            // если средний элемент меньше
-            // направляем наш индекс в middle+1, убирая первую часть из рассмотрения
-            else if (array[middleIndex].getId() < id) {
-                firstIndex = middleIndex + 1;
-            }
-
-            // если средний элемент больше
-            // направляем наш индекс в middle-1, убирая вторую часть из рассмотрения
-            else if (array[middleIndex].getId() > id) {
-                lastIndex = middleIndex - 1;
+    // Bubble sort
+    private static void bubbleSort(Transaction[] transactions) {
+        for (int i = 0; i < transactions.length; i++) {
+            for (int j = i + 1; j < transactions.length; j++) {
+                if (transactions[i].getMoneyAmount().compareTo(transactions[j].getMoneyAmount()) > 0) {
+                    Transaction temp = transactions[i];
+                    transactions[i] = transactions[j];
+                    transactions[j] = temp;
+                    ++countSwaps;
+                }
+                ++countComparisons;
             }
         }
-        return -1;
     }
 
-    // The array must be sorted after id
-    public static int recursiveBinarySearch(Transaction[] array, int firstElement, int lastElement, long id) {
+    
+    // Merge sort
+    private static void merge(Transaction[] arr, int leftIndex, int middleIndex, int rightIndex) {
+        // Find sizes of two subarrays to be merged
+        int leftLength = middleIndex - leftIndex + 1;
+        int rightLength = rightIndex - middleIndex;
 
-        // условие прекращения
-        if (lastElement >= firstElement) {
-            int mid = firstElement + (lastElement - firstElement) / 2;
+        /* Create temp arrays */
+        Transaction[] left = new Transaction[leftLength];
+        Transaction[] right = new Transaction[rightLength];
 
-            // если средний элемент - целевой элемент, вернуть его индекс
-            if (array[mid].getId() == id) {
-                return mid;
-            }
-
-            // если средний элемент больше целевого
-            // вызываем метод рекурсивно по суженным данным
-            if (array[mid].getId() > id) {
-                return recursiveBinarySearch(array, firstElement, mid - 1, id);
-            }
-
-            // также, вызываем метод рекурсивно по суженным данным
-            return recursiveBinarySearch(array, mid + 1, lastElement, id);
+        /*Copy data to temp arrays*/
+        System.arraycopy(arr, leftIndex, left, 0, leftLength);
+        for (int j = 0; j < rightLength; ++j) {
+            right[j] = arr[middleIndex + 1 + j];
         }
 
-        return -1;
+        /* Merge the temp arrays */
+
+        // Initial indexes of first and second subarrays
+        int i = 0, j = 0;
+
+        // Initial index of merged subarray array
+        int k = leftIndex;
+        while (i < leftLength && j < rightLength) {
+            if (left[i].getMoneyAmount().compareTo(right[j].getMoneyAmount()) < 0) {
+                arr[k] = left[i];
+                i++;
+            }
+            else {
+                arr[k] = right[j];
+                j++;
+            }
+            ++countSwaps;
+            ++countComparisons;
+            k++;
+        }
+
+        /* Copy remaining elements of left[] if any */
+        while (i < leftLength) {
+            arr[k] = left[i];
+            i++;
+            k++;
+        }
+
+        /* Copy remaining elements of right[] if any */
+        while (j < rightLength) {
+            arr[k] = right[j];
+            j++;
+            k++;
+        }
     }
 
-    // Array must be sorted after id
-    public static int interpolationSearch(Transaction[] array, long id) {
+    // Main function that sorts arr[leftIndex..rightIndex] using
+    // merge()
+    private static void mergeSort(Transaction[] arr, int leftIndex, int rightIndex)
+    {
+        if (leftIndex < rightIndex) {
+            // Find the middle point
+            int middleIndex = leftIndex + (rightIndex - leftIndex) / 2;
 
-        int startIndex = 0;
-        int lastIndex = (array.length - 1);
+            // Sort first and second halves
+            mergeSort(arr, leftIndex, middleIndex);
+            mergeSort(arr, middleIndex + 1, rightIndex);
 
-        while ((startIndex <= lastIndex) && (id >= array[startIndex].getId()) &&
-                (id <= array[lastIndex].getId())) {
-            // используем формулу интерполяции для поиска возможной лучшей позиции для существующего элемента
-            int pos = (int) (startIndex + (((lastIndex - startIndex) /
-                    (array[lastIndex].getId() - array[startIndex].getId())) *
-                    (id - array[startIndex].getId())));
-
-            if (array[pos].getId() == id) {
-                return pos;
-            }
-
-            if (array[pos].getId() < id) {
-                startIndex = pos + 1;
-            } else {
-                lastIndex = pos - 1;
-            }
+            // Merge the sorted halves
+            merge(arr, leftIndex, middleIndex, rightIndex);
         }
-        return -1;
     }
 
-    public static int fibbonacciSearch(Transaction[] array, long id) throws InterruptedException {
-        int firstIndex = 0;
-        int lastIndex = array.length - 1;
-        double fibIndex = 1.618;
 
-        // условие прекращения (элемент не представлен)
-        while (firstIndex <= lastIndex) {
-            int middleIndex = (int) ((firstIndex + lastIndex) / fibIndex);
-            if (middleIndex >= lastIndex) {
-                fibIndex = 2;
-            }
+    // Insertion sort
+    private static void insertionSort(Transaction[] arr) {
+        int n = arr.length;
+        for (int i = 1; i < n; ++i) {
+            Transaction key = arr[i];
+            int j = i - 1;
 
-            if (array[middleIndex].getId() == id) {
-                return middleIndex;
+            /* Move elements of arr[0..i-1], that are
+               greater than key, to one position ahead
+               of their current position */
+            ++countComparisons;
+            while (j >= 0 && arr[j].getMoneyAmount().compareTo(key.getMoneyAmount()) > 0) {
+                arr[j + 1] = arr[j];
+                --j;
+                ++countSwaps;
+                ++countComparisons;
             }
-
-            else if (array[middleIndex].getId() < id) {
-                firstIndex = middleIndex;
-            }
-
-            else if (array[middleIndex].getId() > id) {
-                lastIndex = middleIndex;
-            }
+            arr[j + 1] = key;
         }
-        return -1;
     }
 }
