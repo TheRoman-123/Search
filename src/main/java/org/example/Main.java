@@ -7,7 +7,7 @@ import java.util.List;
 public class Main {
     private static List<Transaction> transactionList;
 
-    public static void main(String[] args) throws IOException, InterruptedException {
+    public static void main(String[] args) throws IOException {
         Path filePath = Path.of("D:\\Documents\\Java\\ASD\\transactions.csv");
 
         transactionList = SerialTransaction.deserialize(filePath);
@@ -16,37 +16,45 @@ public class Main {
 
         Transaction[] transactions = transactionList.toArray(new Transaction[0]);
 
-        long millis = System.nanoTime();
-        System.out.println(linearSearch(transactions, 44));
-        System.out.println(System.nanoTime() - millis);
+        long nanos = System.nanoTime();
+        System.out.print("Linear search: ");
+        System.out.print("\tIndex of element: " + linearSearch(transactions, 44));
+        System.out.print("\tTime: " + (System.nanoTime() - nanos) + " nanos\t");
         System.out.println();
 
-        millis = System.nanoTime();
-        System.out.println(binarySearch(transactions, 44));
-        System.out.println(System.nanoTime() - millis);
+        nanos = System.nanoTime();
+        System.out.print("Binary search (loop): ");
+        System.out.print("\tIndex of element: " + binarySearch(transactions, 44));
+        System.out.print("\tTime: " + (System.nanoTime() - nanos) + " nanos\t");
         System.out.println();
 
-        millis = System.nanoTime();
-        System.out.println(recursiveBinarySearch(transactions, 0, transactions.length, 44));
-        System.out.println(System.nanoTime() - millis);
+        nanos = System.nanoTime();
+        System.out.print("Recursive binary search: ");
+        System.out.print("\tIndex of element: " + recursiveBinarySearch(transactions, 0, transactions.length, 44));
+        System.out.print("\tTime: " + (System.nanoTime() - nanos) + " nanos\t");
         System.out.println();
 
-        millis = System.nanoTime();
-        System.out.println(interpolationSearch(transactions, 44));
-        System.out.println(System.nanoTime() - millis);
+        nanos = System.nanoTime();
+        System.out.print("Interpolation search: ");
+        System.out.print("\tIndex of element: " + interpolationSearch(transactions, 44));
+        System.out.print("\tTime: " + (System.nanoTime() - nanos) + " nanos\t");
         System.out.println();
 
-        millis = System.nanoTime();
-        System.out.println(fibbonacciSearch(transactions, 44));
-        System.out.println(System.nanoTime() - millis);
+        nanos = System.nanoTime();
+        System.out.print("Fibonacci search: ");
+        System.out.print("\tIndex of element: " + fibbonacciSearch(transactions, 44));
+        System.out.print("\tTime: " + (System.nanoTime() - nanos) + " nanos");
         System.out.println();
+
 
         Tree tree = new Tree(transactions);
 
-        millis = System.nanoTime();
+        nanos = System.nanoTime();
+        System.out.print("Tree search: ");
         Transaction transaction = tree.findTransactionById(44);
-        System.out.println(System.nanoTime() - millis);
+        System.out.print("\tTime: " + (System.nanoTime() - nanos) + " nanos\t");
         System.out.println(transaction);
+
     }
 
     // Returns index of found element
@@ -139,7 +147,7 @@ public class Main {
         return -1;
     }
 
-    public static int fibbonacciSearch(Transaction[] array, long id) throws InterruptedException {
+    public static int fibbonacciSearch(Transaction[] array, long id) {
         int firstIndex = 0;
         int lastIndex = array.length - 1;
         double fibIndex = 1.618;
