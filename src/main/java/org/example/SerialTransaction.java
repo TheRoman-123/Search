@@ -22,6 +22,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+/**
+ * Represents a class for serialization and deserialization of transactions.
+ *
+ * @author Roman Rudi
+ */
 public class SerialTransaction {
     /**
      * Serializes a collection of transactions to a file.
@@ -35,8 +40,7 @@ public class SerialTransaction {
                     .map(Transaction::toString)
                     .collect(Collectors.toCollection(ArrayList::new));
             Files.write(filePath, transactionsToSerialize, Charset.defaultCharset());
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.err.println("Something went wrong when serializing transactions");
         }
     }
@@ -56,15 +60,15 @@ public class SerialTransaction {
         try (Stream<String> stream = Files.lines(filePath)) {
             return stream
                     .map(line -> {
-                            String[] fields = line.split(",");
-                            return new Transaction(
-                                    Long.parseLong(fields[0].trim()),
-                                    fields[1].trim(),
-                                    fields[2].trim(),
-                                    ZonedDateTime.parse(fields[3].trim(), dtf),
-                                    new BigDecimal(fields[4].trim()),
-                                    Currency.getInstance(fields[5].trim())
-                            );
+                        String[] fields = line.split(",");
+                        return new Transaction(
+                                Long.parseLong(fields[0].trim()),
+                                fields[1].trim(),
+                                fields[2].trim(),
+                                ZonedDateTime.parse(fields[3].trim(), dtf),
+                                new BigDecimal(fields[4].trim()),
+                                Currency.getInstance(fields[5].trim())
+                        );
                     })
                     .collect(Collectors.toList());
         }

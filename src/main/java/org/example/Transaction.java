@@ -12,6 +12,9 @@ import java.util.Objects;
  * Represents a financial transaction between two parties, consisting of an ID, sender and recipient card numbers,
  * date and time, amount of money, and currency. This class provides methods for creating new transactions,
  * copying them, and retrieving transaction details.
+ * <p>Please see the {@link org.example.Transaction} class for true identity
+ *
+ * @author Roman Rudi
  */
 public class Transaction {
     /** Inner class providing an empty transaction, used as a default value. */
