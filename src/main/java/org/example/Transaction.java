@@ -14,6 +14,7 @@ import java.util.Objects;
  * copying them, and retrieving transaction details.
  */
 public class Transaction {
+
     /** Inner class providing an empty transaction, used as a default value. */
     private static class EmptyTransaction {
         public static final Transaction emptyTransaction = new Transaction();
