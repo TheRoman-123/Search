@@ -101,7 +101,9 @@ public class MyStack<T> implements Iterable<T> {
         if (size <= 0)
             throw new NoSuchElementException("Stack is empty");
         T retElement = tail.element;
-        tail.previous.next = null;
+        if (tail.previous != null) {
+            tail.previous.next = null;
+        }
         tail = tail.previous;
         --size;
         return retElement;

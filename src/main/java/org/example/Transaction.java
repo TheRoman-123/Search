@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Currency;
 import java.util.Objects;
 
@@ -155,11 +156,11 @@ public class Transaction {
     @Override
     public String toString() {
         return String.format(
-                "%s\t%s\t%s\t%s\t%s\t%s",
+                "%s,%s,%s,%s,%s,%s",
                 id,
                 senderCardNumber,
                 recipientCardNumber,
-                dateTime,
+                dateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME.withZone(ZoneId.of("UTC"))),
                 moneyAmount,
                 currency
         );
