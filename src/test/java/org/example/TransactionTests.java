@@ -69,7 +69,7 @@ class TransactionTests {
 
     @Test
     void testToString() {
-        String expected = "123456789\t1111222233334444\t5555666677778888\t2023-04-13T09:30Z[UTC]\t100.00\tUSD";
+        String expected = "123456789,1111222233334444,5555666677778888,2023-04-13T09:30,100.00,USD";
         assertEquals(expected, transaction.toString());
     }
 
