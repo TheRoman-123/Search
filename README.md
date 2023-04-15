@@ -1,4 +1,4 @@
-# Dynamic data structures
+# Code testing
 
 ## Table of contents
 
@@ -8,8 +8,7 @@
 
 ## General info
 
-This project is created for ASDC lab works #3. Custom implementation of Stack
-and Binary Tree is provided in the source code.
+This project is created for ASDC lab work #3.14. Implementation of unit tests for created classes.
 
 ## Technologies
 
